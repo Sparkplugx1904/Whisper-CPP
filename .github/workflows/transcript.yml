@@ -13,11 +13,8 @@ jobs:
     continue-on-error: true
 
     steps:        
-      - name: Checkout Whisper-CPP Repositori
+      - name: Checkout Repositori
         uses: actions/checkout@v4
-        with:
-          repository: Sparkplugx1904/Whisper-CPP
-          path: ./Whisper-CPP
 
       - name: Setup FFmpeg
         continue-on-error: true
