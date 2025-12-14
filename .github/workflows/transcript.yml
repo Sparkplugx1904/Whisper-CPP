@@ -20,12 +20,11 @@ jobs:
           echo "./bin/"
           ls ./bin
         
-      - name: Clone Whisper-CPP dan keluarkan isinya ke ../
-        continue-on-error: true
-        run: |
-          git clone https://github.com/Sparkplugx1904/Whisper-CPP.git temp_whisper
-          mv temp_whisper ./
-          rm -rf temp_whisper
+      - name: Checkout Whisper-CPP Repositori
+        uses: actions/checkout@v4
+        with:
+          repository: Sparkplugx1904/Whisper-CPP
+          path: ./Whisper-CPP
 
       - name: Setup FFmpeg
         continue-on-error: true
