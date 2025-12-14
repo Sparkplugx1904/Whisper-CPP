@@ -35,7 +35,7 @@ jobs:
       - name: Run transcriptor CPP
         run: |
           # python3 -u transcriptor_cpp.py "https://github.com/Sparkplugx1904/voiceoftrisma/raw/refs/heads/main/assets/sample_vot.mp3" -m medium
-          python3 -u transcriptor_cpp.py "https://archive.org/download/vot-denpasar-20251122-183000/VOT-Denpasar_22-11-25-0.mp3" tiny
+          python3 -u transcriptor_cpp.py "https://archive.org/download/vot-denpasar-20251122-183000/VOT-Denpasar_22-11-25-0.mp3" base
           # python3 -u transcriptor_cpp.py "https://github.com/Sparkplugx1904/Whisper-CPP/raw/refs/heads/main/samples/sample_vot.wav" large-v3
           # python3 -u transcriptor_cpp.py "https://archive.org/download/vot-denpasar-20251124-183031/VOT-Denpasar_24-11-25-3.mp3" -cm "https://huggingface.co/Sparkplugx1904/Indonesia-Whisper-GGML/resolve/main/ggml-small.bin"
 
