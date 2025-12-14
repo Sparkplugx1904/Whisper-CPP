@@ -52,7 +52,7 @@ def check_dependencies():
         log_error("'curl' tidak ditemukan. Harap instal 'curl'.")
         dependencies_ok = False
     
-    whisper_cli_path = Path("./whisper-cli")
+    whisper_cli_path = Path("bin/whisper-cli")
     if not whisper_cli_path.exists():
         log_error(f"'{whisper_cli_path}' tidak ditemukan. Pastikan Anda telah mengompilasi whisper.cpp.")
         dependencies_ok = False
