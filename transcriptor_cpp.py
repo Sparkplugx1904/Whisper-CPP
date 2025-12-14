@@ -38,7 +38,7 @@ def log_error(msg, exit_app=False):
 
 # --- Konfigurasi ---
 VALID_MODELS = ["tiny", "base", "small", "medium", "large-v1", "large-v2", "large-v3", "large-v3-turbo"]
-DEFAULT_MODEL_NAME = "medium"
+DEFAULT_MODEL_NAME = "small"
 # --------------------
 
 # --- Fungsi Inti ---
