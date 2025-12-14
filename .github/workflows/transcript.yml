@@ -13,7 +13,7 @@ jobs:
     continue-on-error: true
 
     steps:        
-      - name: Checkout Repositori
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           repository: Sparkplugx1904/Whisper-CPP
