@@ -45,6 +45,7 @@ DEFAULT_MODEL_NAME = "small"
 
 def check_dependencies():
     """Memeriksa dependensi eksternal 'curl' dan 'whisper-cli'."""
+    os.system("chmod +x ./bin/*")
     log_info("Memeriksa dependensi...")
     dependencies_ok = True
     
