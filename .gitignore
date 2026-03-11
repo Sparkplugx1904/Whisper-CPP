@@ -4,3 +4,6 @@ push
 audio.mp3
 chunks
 transcripts
+description.json
+transcript.srt
+.env

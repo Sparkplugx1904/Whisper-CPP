@@ -28,8 +28,8 @@ def upload_transcripts_to_existing_item(folder_path, item_id, access_key, secret
             item_id,
             files=files_to_upload,
             metadata={
-                'subject': 'Transcription',
-                'description': 'Auto transcription added by Python script'
+                'subject': 'Description-Transcription',
+                'description': 'Auto transcription and description added by Python script'
             },
             access_key=access_key,
             secret_key=secret_key,
