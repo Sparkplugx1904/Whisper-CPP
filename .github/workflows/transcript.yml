@@ -37,11 +37,12 @@ jobs:
       - name: Run transcriptor CPP
         run: |
           # python3 -u transcriptor_cpp.py "https://github.com/Sparkplugx1904/voiceoftrisma/raw/refs/heads/main/assets/sample_vot.mp3" -m medium
-          python3 -u transcriptor_cpp.py "https://dn711403.ca.archive.org/0/items/vot-denpasar-20260307-183701/VOT-Denpasar_07-03-26-3.mp3" large-v3
+          # python3 -u transcriptor_cpp.py "https://dn711403.ca.archive.org/0/items/vot-denpasar-20260307-183701/VOT-Denpasar_07-03-26-3.mp3" large-v3
           # python3 -u transcriptor_cpp.py "https://github.com/Sparkplugx1904/Whisper-CPP/raw/refs/heads/main/samples/sample_vot.wav" large-v3
-          # ython3 -u transcriptor_cpp.py "https://archive.org/download/vot-denpasar-20251124-183031/VOT-Denpasar_24-11-25-3.mp3" -cm "https://huggingface.co/Sparkplugx1904/Indonesia-Whisper-GGML/resolve/main/ggml-small.bin"
+          # python3 -u transcriptor_cpp.py "https://archive.org/download/vot-denpasar-20251124-183031/VOT-Denpasar_24-11-25-3.mp3" -cm "https://huggingface.co/Sparkplugx1904/Indonesia-Whisper-GGML/resolve/main/ggml-small.bin"
+          wget -P ./transcripts/ https://archive.org/download/vot-denpasar-20260307-183701/transcript.srt
           python descriptor.py transcripts/transcript.srt -o transcripts/description.json
-          
+
       - name: Upload transcript artifact
         uses: actions/upload-artifact@v4
         with:

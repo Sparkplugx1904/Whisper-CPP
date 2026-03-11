@@ -4,3 +4,5 @@ internetarchive
 noisereduce
 scipy
 numpy
+dotenv
+google-genai
