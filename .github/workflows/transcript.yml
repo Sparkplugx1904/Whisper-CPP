@@ -37,6 +37,7 @@ jobs:
       - name: Run transcriptor CPP
         run: |
           echo Downloading...
+          mkdir -p transcripts
           curl -L -o transcripts/transcript.srt https://archive.org/download/vot-denpasar-20260307-183701/transcript.srt
           echo Descripting...
           python descriptor.py transcripts/transcript.srt -o transcripts/description.json
