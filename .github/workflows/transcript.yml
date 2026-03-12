@@ -35,6 +35,8 @@ jobs:
           chmod +x ./bin/*
 
       - name: Run transcriptor CPP
+        env: 
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           echo Downloading...
           mkdir -p transcripts
