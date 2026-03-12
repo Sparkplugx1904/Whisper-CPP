@@ -2,13 +2,11 @@ import os
 import re
 import json
 import argparse
-from dotenv import load_dotenv
 from google import genai
 from pydantic import BaseModel
 from typing import List
 
-load_dotenv()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 
 def parse_model_version(name: str) -> tuple:
