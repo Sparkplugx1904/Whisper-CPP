@@ -1,0 +1,51 @@
+name: Record Stream and Push
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6  * * *"   # tiap hari jam 06:00 UTC (~14:00 WITA)
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        suffix: ["-s 0 -p 0", "-s 1 -p 1"]
+        # suffix: ["-s 0 -p 0", "-s 1 -p 1", "-s 2 -p 2"]
+
+    steps:
+      - name: Clone repo
+        env:
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+        run: |
+          curl -L -o record.py https://raw.githubusercontent.com/Sparkplugx1904/voiceoftrisma/main/main/record.py
+          curl -L -o ffmpeg https://github.com/Sparkplugx1904/voiceoftrisma/raw/refs/heads/main/bin/ffmpeg
+          curl -L -o requirements.txt https://raw.githubusercontent.com/Sparkplugx1904/voiceoftrisma/main/requirements.txt
+          curl -L -o ffprobe https://github.com/Sparkplugx1904/voiceoftrisma/raw/refs/heads/main/bin/ffprobe
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Verify FFmpeg
+        run: |
+          chmod +x ./ffmpeg ./ffprobe
+          ./ffmpeg -version
+          ./ffprobe -version
+
+      - name: Run recorder
+        env:
+          MY_ACCESS_KEY: ${{ secrets.MY_ACCESS_KEY }}
+          MY_SECRET_KEY: ${{ secrets.MY_SECRET_KEY }}
+        run: python record.py --skip-check ${{ matrix.suffix }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: output${{ matrix.suffix }}
+          path: recordings/
+          retention-days: 3
