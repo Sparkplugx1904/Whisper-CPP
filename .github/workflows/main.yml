@@ -2,8 +2,8 @@ name: Record Stream and Push
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 6  * * *"   # tiap hari jam 06:00 UTC (~14:00 WITA)
+  # schedule:
+  #   - cron: "0 6  * * *"   # tiap hari jam 06:00 UTC (~14:00 WITA)
 
 jobs:
   record:

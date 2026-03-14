@@ -7,3 +7,6 @@ transcripts
 description.json
 transcript.srt
 .env
+ffmpeg.exe
+ffplay.exe
+ffprobe.exe
