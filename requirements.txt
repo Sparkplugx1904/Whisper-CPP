@@ -7,4 +7,3 @@ numpy
 dotenv
 google-genai
 free-proxy
-fp
