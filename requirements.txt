@@ -6,3 +6,4 @@ scipy
 numpy
 dotenv
 google-genai
+free-proxy
