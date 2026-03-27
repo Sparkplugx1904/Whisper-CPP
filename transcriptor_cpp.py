@@ -179,22 +179,24 @@ def transcribe_single_audio(audio_path: Path, model_path: Path, whisper_cli_path
     # Pindahkan TXT
     try:
         if temp_txt_file.exists():
-            final_txt.write_text(temp_txt_file.read_text(encoding="utf-8").strip(), encoding="utf-8")
+            content = temp_txt_file.read_bytes().decode("utf-8", errors="replace").strip()
+            final_txt.write_text(content, encoding="utf-8")
             temp_txt_file.unlink()
             log_success(f"TXT disimpan ke {final_txt}.")
         else:
-            log_warn(f"File TXT output tidak ditemukan: {temp_txt_file}. Transkripsi mungkin gagal.")
+            log_warn(f"File TXT output tidak ditemukan: {temp_txt_file}.")
     except Exception as e:
         log_error(f"Gagal memproses file TXT: {e}")
 
     # Pindahkan SRT
     try:
         if temp_srt_file.exists():
-            final_srt.write_text(temp_srt_file.read_text(encoding="utf-8").strip(), encoding="utf-8")
+            content = temp_srt_file.read_bytes().decode("utf-8", errors="replace").strip()
+            final_srt.write_text(content, encoding="utf-8")
             temp_srt_file.unlink()
             log_success(f"SRT disimpan ke {final_srt}.")
         else:
-            log_warn(f"File SRT output tidak ditemukan: {temp_srt_file}. Transkripsi mungkin gagal.")
+            log_warn(f"File SRT output tidak ditemukan: {temp_srt_file}.")
     except Exception as e:
         log_error(f"Gagal memproses file SRT: {e}")
 
