@@ -1,4 +1,4 @@
-name: Transcript Audio VOT
+name: Whisper Model Testing
 
 on:
   push:

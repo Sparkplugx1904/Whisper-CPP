@@ -156,10 +156,15 @@ def transcribe_single_audio(audio_path: Path, model_path: Path, whisper_cli_path
         str(whisper_cli_path),
         "-m", str(model_path),
         "-f", str(audio_path),
-        "--temperature", "0.0",   # ← 0.6 → 0.0 (greedy, lebih cepat & konsisten)
-        "--beam-size", "1",       # ← TAMBAH (default 5, ini paling makan waktu)
-        "--best-of", "1",         # ← TAMBAH (default 5)
-        "-t", "4",                # ← TAMBAH (eksplisit max thread)
+        "--temperature", "0.0",
+        "--temperature-inc", "0.2",   # ← Naikan temperature otomatis jika deteksi masalah
+        "--beam-size", "1",
+        "--best-of", "1",
+        "-t", "4",
+        "--condition-on-previous-text", "0",  # ← PALING PENTING: cegah loop dari konteks sebelumnya
+        "--no-speech-thold", "0.6",           # ← Skip segmen yang bukan speech (musik)
+        "--entropy-thold", "2.4",             # ← Deteksi hallucination via entropy
+        "--logprob-thold", "-1.0",            # ← Buang output dengan confidence rendah
         "-of", str(output_base_path_temp),
         "-otxt",
         "-osrt",
