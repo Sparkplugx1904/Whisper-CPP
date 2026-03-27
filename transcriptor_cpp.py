@@ -151,17 +151,20 @@ def transcribe_single_audio(audio_path: Path, model_path: Path, whisper_cli_path
         log_error(f"Gagal membersihkan/membuat file transkrip: {e}", exit_app=True)
 
     log_info(f"Mentranskripsi: {audio_path.name}")
-    
+        
     cmd = [
         str(whisper_cli_path),
         "-m", str(model_path),
         "-f", str(audio_path),
-        "--temperature", "0.6",
+        "--temperature", "0.0",   # ← 0.6 → 0.0 (greedy, lebih cepat & konsisten)
+        "--beam-size", "1",       # ← TAMBAH (default 5, ini paling makan waktu)
+        "--best-of", "1",         # ← TAMBAH (default 5)
+        "-t", "4",                # ← TAMBAH (eksplisit max thread)
         "-of", str(output_base_path_temp),
         "-otxt",
         "-osrt",
-        "-l", "id", # Bahasa Indonesia
-        "-pp" 
+        "-l", "id",
+        "-pp"
     ]
     
     log_info(f"Menjalankan whisper-cli...")

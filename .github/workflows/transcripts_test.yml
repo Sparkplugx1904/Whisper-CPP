@@ -1,0 +1,45 @@
+name: Transcript Audio VOT
+
+on:
+  push:
+    # branches:
+    #   - main
+  workflow_dispatch:
+
+jobs:
+  transcribe:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:        
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Sparkplugx1904/Whisper-CPP
+
+      - name: Setup FFmpeg
+        continue-on-error: true
+        uses: FedericoCarboni/setup-ffmpeg@v3
+
+      - name: Checking...
+        run: |
+          echo "./"
+          ls
+          echo "./bin/"
+          ls ./bin
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          chmod +x ./bin/*
+
+      - name: Run transcriptor CPP
+        run: |
+          python transcriptor_cpp.py https://archive.org/download/vot-denpasar-20260327-183000/VOT-Denpasar_27-03-26-0.mp3 large-v3-turbo
+
+      - name: Upload transcript artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vot-transcript
+          path: transcripts/
+          retention-days: 1
