@@ -8,42 +8,44 @@ from typing import List
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
-def parse_model_version(name: str) -> tuple:
+def parse_model_score(name: str) -> tuple:
     """
-    Ekstrak versi numerik dari nama model agar sorting akurat.
+    Ekstrak versi numerik dari nama model.
+    Hanya model 'flash' yang akan dipertimbangkan.
     Contoh:
+      'gemini-3.0-flash' -> (3, 0)
       'gemini-2.5-flash' -> (2, 5)
-      'gemini-2.0-flash' -> (2, 0)
-      'gemini-flash-lite-latest' -> (0, 0)  <- tersingkir via filter
     """
     match = re.search(r'gemini-(\d+)(?:\.(\d+))?-flash', name.lower())
     if match:
         major = int(match.group(1))
         minor = int(match.group(2)) if match.group(2) else 0
         return (major, minor)
-    return (0, 0)
+    return (-1, -1)
 
 
 def get_latest_flash_model(client):
     """
-    Pilih model Flash terbaru berdasarkan nomor versi numerik — bukan urutan abjad.
-    Kriteria valid: mengandung 'flash', punya nomor versi, bukan exp/lite/preview.
+    Pilih model Gemini Flash terbaru berdasarkan versi tertinggi.
+    Kriteria valid: mengandung 'flash', punya nomor versi,
+    bukan exp/lite/preview/tts/vision/audio/dll.
     """
     try:
         available_models = list(client.models.list())
 
-        flash_models = [
-            m.name for m in available_models
-            if 'flash'   in m.name.lower()
-            and 'exp'     not in m.name.lower()
-            and 'lite'    not in m.name.lower()
-            and 'preview' not in m.name.lower()
-            and parse_model_version(m.name) > (0, 0)
-        ]
+        valid_models = []
+        for m in available_models:
+            n = m.name.lower()
+            if any(x in n for x in ['exp', 'lite', 'preview', 'tts', 'audio', 'vision', 'embedding']):
+                continue
+            
+            score = parse_model_score(m.name)
+            if score[0] >= 0:
+                valid_models.append(m.name)
 
-        if flash_models:
-            flash_models.sort(key=parse_model_version, reverse=True)
-            best_model = flash_models[0]
+        if valid_models:
+            valid_models.sort(key=parse_model_score, reverse=True)
+            best_model = valid_models[0]
             if best_model.startswith("models/"):
                 best_model = best_model.split("/", 1)[1]
             print(f"[INFO] Auto-select model berhasil. Menggunakan: {best_model}")
@@ -52,8 +54,8 @@ def get_latest_flash_model(client):
     except Exception as e:
         print(f"[WARNING] Gagal mengambil daftar model dinamis: {e}")
 
-    print("[INFO] Menggunakan model fallback default.")
-    return "gemini-2.5-flash"
+    print("[INFO] Menggunakan model fallback default (gemini-3.0-flash).")
+    return "gemini-3.0-flash"
 
 
 def resolve_output_path(output_arg: str) -> str:
