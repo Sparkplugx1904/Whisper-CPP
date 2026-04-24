@@ -4,6 +4,7 @@ import sys
 import os
 import subprocess
 import re
+import json
 import traceback
 from pathlib import Path
 from typing import List, Tuple, Optional
@@ -138,15 +139,19 @@ def transcribe_single_audio(audio_path: Path, model_path: Path, whisper_cli_path
     
     final_txt = Path("transcripts/transcript.txt")
     final_srt = Path("transcripts/transcript.srt")
+    final_json = Path("transcripts/transcript.json")
     output_base_path_temp = audio_path.stem
     temp_txt_file = Path(output_base_path_temp).with_suffix(".txt")
     temp_srt_file = Path(output_base_path_temp).with_suffix(".srt")
+    temp_json_file = Path(output_base_path_temp).with_suffix(".json")
 
     try:
         final_txt.write_text("", encoding="utf-8")
         final_srt.write_text("", encoding="utf-8")
+        final_json.write_text("", encoding="utf-8")
         if temp_txt_file.exists(): temp_txt_file.unlink()
         if temp_srt_file.exists(): temp_srt_file.unlink()
+        if temp_json_file.exists(): temp_json_file.unlink()
     except IOError as e:
         log_error(f"Gagal membersihkan/membuat file transkrip: {e}", exit_app=True)
 
@@ -169,6 +174,7 @@ def transcribe_single_audio(audio_path: Path, model_path: Path, whisper_cli_path
         "-of", str(output_base_path_temp),
         "-otxt",
         "-osrt",
+        "-ojson",
         "-l", "id",
         "-pp"
     ]
@@ -208,6 +214,24 @@ def transcribe_single_audio(audio_path: Path, model_path: Path, whisper_cli_path
             log_warn(f"File SRT output tidak ditemukan: {temp_srt_file}.")
     except Exception as e:
         log_error(f"Gagal memproses file SRT: {e}")
+
+    # Pindahkan JSON (pretty-print agar mudah dibaca)
+    try:
+        if temp_json_file.exists():
+            raw = temp_json_file.read_bytes().decode("utf-8", errors="replace").strip()
+            try:
+                parsed = json.loads(raw)
+                pretty = json.dumps(parsed, ensure_ascii=False, indent=2)
+            except json.JSONDecodeError:
+                log_warn("JSON dari whisper-cli tidak valid, disimpan apa adanya.")
+                pretty = raw
+            final_json.write_text(pretty, encoding="utf-8")
+            temp_json_file.unlink()
+            log_success(f"JSON disimpan ke {final_json}.")
+        else:
+            log_warn(f"File JSON output tidak ditemukan: {temp_json_file}.")
+    except Exception as e:
+        log_error(f"Gagal memproses file JSON: {e}")
 
     log_success("Transkripsi selesai.")
 
@@ -276,7 +300,7 @@ def main():
                 log_warn(f"Gagal menghapus {original_audio_path}: {e}")
         
         log_success("====== PROSES SELESAI ======")
-        log_info("Output akhir ada di folder ./transcripts/ (transcript.txt & transcript.srt)")
+        log_info("Output akhir ada di folder ./transcripts/ (transcript.txt, transcript.srt & transcript.json)")
 
 # -----------------------------------------------------
 # BLOK EKSEKUSI UTAMA
