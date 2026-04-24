@@ -174,7 +174,7 @@ def transcribe_single_audio(audio_path: Path, model_path: Path, whisper_cli_path
         "-of", str(output_base_path_temp),
         "-otxt",
         "-osrt",
-        "-ojson",
+        "-oj",
         "-l", "id",
         "-pp"
     ]
