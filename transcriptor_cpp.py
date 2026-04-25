@@ -91,22 +91,29 @@ def ensure_model_exists(model_name: str, custom_model_url: Optional[str]) -> Pat
     """Memastikan model GGML/GGUF ada di folder ./models/."""
     
     if custom_model_url:
+        # --- FIX: Cek apakah ini path lokal yang sudah ada ---
+        local_path = Path(custom_model_url)
+        if local_path.exists() and local_path.is_file():
+            log_success(f"Model kustom lokal ditemukan langsung: {local_path.resolve()}")
+            return local_path
+        # --- END FIX ---
+
         model_filename = Path(custom_model_url).name
         if not model_filename or '.' not in model_filename:
             log_error("URL model kustom tidak valid.", exit_app=True)
             
         model_path = Path(f"./models/{model_filename}")
-        log_info(f"Memeriksa model kustom: {model_path}")
+        log_info(f"Memeriksa model kustom di cache: {model_path}")
         
         if model_path.exists():
-            log_success(f"Model kustom ditemukan: {model_path}")
+            log_success(f"Model kustom ditemukan di cache: {model_path}")
             return model_path
         
         log_warn(f"Model kustom belum ada, mengunduh dari: {custom_model_url}")
         if not download_file(custom_model_url, model_path):
             log_error("Gagal mengunduh model kustom. Membatalkan.", exit_app=True)
         return model_path
-        
+            
     else:
         log_info(f"Memeriksa model standar: {model_name}")
         if model_name not in VALID_MODELS:
